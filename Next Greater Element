@@ -1,0 +1,72 @@
+🧩 Problem: Next Greater Element (NGE)
+
+Given an array, for each element find:
+
+first greater element on the right
+
+🧠 1. Brute Force
+💬 What you say
+
+“For each element, I’ll scan to the right and find the first greater element.”
+
+✅ Code (Brute)
+int[] nextGreater(int[] nums) {
+    int n = nums.length;
+    int[] res = new int[n];
+
+    for (int i = 0; i < n; i++) {
+        res[i] = -1; // default
+
+        for (int j = i + 1; j < n; j++) {
+            if (nums[j] > nums[i]) {
+                res[i] = nums[j];
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+⏱ Complexity
+Time: O(n²)
+Space: O(1)
+❌ Problem
+
+Repeated work — same elements checked multiple times
+
+3. Optimal Approach (Monotonic Stack)
+🧠 Key Idea
+
+Use a stack to store indices of elements waiting for next greater
+
+Algorithm (Right-to-Left Traversal):
+Traverse the array from right to left.
+For the current element, pop all elements from the stack that are smaller than or equal to it (they cannot be the NGE for any element to the left).
+If the stack is not empty, the top of the stack is the NGE. If empty, the NGE is -1.
+Push the current element onto the stack for future comparisons
+
+----------------------------------------------------------
+import java.util.Stack;
+
+public class NextGreaterElement {
+    public static int[] getNGE(int[] arr) {
+        int n = arr.length;
+        int[] result = new int[n];
+        Stack<Integer> stack = new Stack<>();
+
+        // Traverse from right to left
+        for (int i = n - 1; i >= 0; i--) {
+            // Remove smaller elements from stack
+            while (!stack.isEmpty() && stack.peek() <= arr[i]) {
+                stack.pop();
+            }
+            // If stack empty, no greater element on right
+            result[i] = stack.isEmpty() ? -1 : stack.peek();
+            
+            // Push current element to stack
+            stack.push(arr[i]);
+        }
+        return result;
+    }
+}
+----------------------------------------------------
