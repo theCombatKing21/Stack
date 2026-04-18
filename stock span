@@ -1,0 +1,76 @@
+🧠 Problem Statement (simple)
+
+For each day, find:
+
+“How many consecutive days before today had price ≤ today’s price?”
+
+🧠 1. Brute Force (start in interview)
+💬 What you say
+
+“For each day, I’ll go backward and count until I find a greater element.”
+
+⏱ Complexity
+Time: O(n^2)
+
+  public static void printSpan(int arr[],int n){
+        for(int i=0;i<n;i++){
+            int span=1;
+            for(int j=i-1;j>=0 && arr[j]<=arr[i];j--)
+                span++;
+            System.out.print(span+" ");
+
+
+🚀 2. Optimization Insight
+💬 What you say
+
+“Instead of re-checking previous elements repeatedly, I can use a stack to store useful candidates.”
+
+In the previous approach, for each day we kept moving leftward and comparing prices one by one.
+We continued as long as the current day’s price was greater than or equal to the previous day’s price. 
+But the moment we find a price greater than the current day’s price, we stop.
+
+That means we are always stopping at the first previous greater element.
+
+The idea is to use a stack to directly find this first previous greater element for every day, 
+instead of checking all consecutive smaller ones. Once we know that index, we can compute the span as:
+
+Span[i] = currentIndex − indexOfPreviousGreaterElement
+-----------------------------------------------
+import java.util.Stack;
+import java.util.Arrays;
+
+class StockSpan {
+    public static int[] calculateSpan(int[] prices) {
+        int n = prices.length;
+        int[] span = new int[n];
+        // Stack stores indices
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < n; i++) {
+            // Pop elements smaller than current price
+            while (!stack.isEmpty() && prices[stack.peek()] <= prices[i]) {
+                stack.pop();
+            }
+
+            // If stack is empty, all previous prices are smaller
+            if (stack.isEmpty()) {
+                span[i] = i + 1;
+            } else {
+                // Span is current index minus the index of previous higher price
+                span[i] = i - stack.peek();
+            }
+
+            // Push current day index
+            stack.push(i);
+        }
+        return span;
+    }
+
+    public static void main(String[] args) {
+        int[] prices = {100, 80, 60, 70, 60, 75, 85};
+        int[] span = calculateSpan(prices);
+        System.out.println("Prices: " + Arrays.toString(prices));
+        System.out.println("Spans: " + Arrays.toString(span));
+        // Output: [1, 1, 1, 2, 1, 4, 6]
+    }
+}
