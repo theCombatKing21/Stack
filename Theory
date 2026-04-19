@@ -1,0 +1,207 @@
+🧠 1. What is a Stack? (Definition)
+💬 Say this
+
+“A stack is a linear data structure that follows LIFO (Last In First Out). The last element inserted is the first one to be removed.”
+
+🧠 2. Why use a Stack? (VERY IMPORTANT)
+💬 Strong interview answer
+
+“I use a stack when I need to track elements in a last-in-first-out manner, especially when solving problems involving nested structures, backtracking, or maintaining a history of elements waiting to be processed.”
+
+🔥 When stack is the RIGHT choice
+1. Matching / nested → parentheses, expressions
+2. Undo / rollback → browser history
+3. Monotonic behavior → next greater/smaller
+4. DFS traversal → recursion replacement
+5. Expression evaluation → postfix/prefix
+🧠 3. Why stack over other data structures?
+💬 Answer like this
+
+“Stack is useful when the most recent element is the most relevant one. Unlike arrays or queues, it gives O(1) access to the latest unresolved element.”
+
+⚖️ Comparison intuition
+Structure	When to use
+Stack	recent element matters
+Queue	order matters (FIFO)
+Array/List	random access needed
+Heap	need min/max quickly
+HashMap	fast lookup
+🧠 4. Time Complexity (IMPORTANT)
+Operations:
+push() → O(1)
+pop() → O(1)
+peek() → O(1)
+💬 Why O(1)?
+
+“Because stack operations only interact with the top element, and no shifting or traversal is required.”
+
+⚠️ Follow-up they may ask:
+
+“What about dynamic resizing?”
+
+👉 Answer:
+
+“If implemented using an array, resizing can take O(n), but amortized complexity remains O(1).”
+
+🧠 5. Space Complexity
+Stack uses O(n) space
+💬 Say:
+
+“In worst case, all elements may be stored in the stack.”
+
+🧠 6. Stack vs Queue (VERY COMMON)
+Feature	Stack	Queue
+Order	LIFO	FIFO
+Insert	top	rear
+Remove	top	front
+Use case	recursion, undo	scheduling, buffering
+💬 Interview answer
+
+“Stack processes most recent elements first, while queue processes elements in arrival order.”
+
+🧠 7. Implement Stack using Queue
+💡 Idea
+
+Make queue behave like stack by rotating elements
+
+✅ Code (one queue)
+id="r6xwja"
+class MyStack {
+    Queue<Integer> q = new LinkedList<>();
+
+    public void push(int x) {
+        q.add(x);
+        int size = q.size();
+
+        // rotate previous elements
+        for (int i = 0; i < size - 1; i++) {
+            q.add(q.remove());
+        }
+    }
+
+    public int pop() {
+        return q.remove();
+    }
+
+    public int top() {
+        return q.peek();
+    }
+
+    public boolean empty() {
+        return q.isEmpty();
+    }
+}
+💬 Explain like this
+
+“After inserting, I rotate the queue so the newest element comes to the front, mimicking stack behavior.”
+
+🧠 8. Implement Queue using Stack
+💡 Idea
+
+Use two stacks:
+
+inStack → push
+outStack → pop
+✅ Code
+id="a3v8yt"
+class MyQueue {
+    Stack<Integer> in = new Stack<>();
+    Stack<Integer> out = new Stack<>();
+
+    public void push(int x) {
+        in.push(x);
+    }
+
+    public int pop() {
+        if (out.isEmpty()) {
+            while (!in.isEmpty()) {
+                out.push(in.pop());
+            }
+        }
+        return out.pop();
+    }
+
+    public int peek() {
+        if (out.isEmpty()) {
+            while (!in.isEmpty()) {
+                out.push(in.pop());
+            }
+        }
+        return out.peek();
+    }
+
+    public boolean empty() {
+        return in.isEmpty() && out.isEmpty();
+    }
+}
+💬 Explain like this
+
+“We reverse order using two stacks to simulate FIFO behavior.”
+
+🧠 9. Monotonic Stack (MOST IMPORTANT CONCEPT)
+💬 Say:
+
+“A monotonic stack maintains elements in increasing or decreasing order and is used to efficiently find next greater or smaller elements.”
+
+Types:
+Increasing stack
+Decreasing stack
+Where used:
+Next Greater Element
+Stock Span
+Daily Temperatures
+Histogram
+🧠 10. Stack vs Recursion
+💬 Say:
+
+“Recursion internally uses a call stack. We can replace recursion with an explicit stack for better control.”
+
+🧠 11. Real-world uses (interviewer may ask)
+Undo/Redo (editors)
+Browser history
+Expression parsing
+Backtracking (DFS)
+Syntax parsing (compilers)
+🧠 12. Common Interview Questions
+
+You should be ready to answer:
+
+❓ Why stack here?
+
+“We need to process elements in reverse order of arrival / maintain unresolved elements.”
+
+❓ Why not queue?
+
+“Queue processes oldest first, but here we need most recent element first.”
+
+❓ Why not array?
+
+“We need dynamic push/pop from one end efficiently without shifting.”
+
+📝 🧾 FINAL QUICK REVISION SHEET
+Stack = LIFO
+
+Ops:
+push/pop/peek → O(1)
+
+Use when:
+- recent element matters
+- nested structure
+- monotonic problems
+
+Monotonic stack:
+- next greater/smaller
+
+Stack vs Queue:
+- LIFO vs FIFO
+
+Implement:
+- stack using queue (rotate)
+- queue using stack (2 stacks)
+🔥 Final advice (important for YOU)
+
+When solving problems, always ask yourself:
+
+“Am I trying to track the most recent unresolved element?”
+
+👉 If YES → Stack
